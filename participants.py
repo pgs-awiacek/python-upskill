@@ -5,35 +5,35 @@ from pathlib import Path
 
 
 class Participant:
-    def __init__(self, id, first_name, last_name):
+    def __init__(self, id, first_name, last_name, weight=1):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
-
-
-def get_file_path(file_name, file_extension):
-    data_path = Path('data/').joinpath(file_name + '.' + file_extension)
-    return data_path
+        self.weight = weight
 
 
 def load_participants_csv(file_name):
     with open(file_name) as csv_file:
         reader = csv.DictReader(csv_file, delimiter=',')
-        participants_list = []
-        for row in reader:
-            participant = Participant(row['id'], row['first_name'], row['last_name'])
-            participants_list.append(participant)
-        return participants_list
+        data = list(reader)
+    return data
 
 
 def load_participants_json(file_name):
     with open(file_name) as json_file:
-        participants_json = json.load(json_file)
-        participants_list = []
-        for row in participants_json:
+        reader = json.load(json_file)
+    return reader
+
+
+def parse_participants(data):
+    participants_list = []
+    for row in data:
+        if 'weight' in row:
+            participant = Participant(row['id'], row['first_name'], row['last_name'], row['weight'])
+        else:
             participant = Participant(row['id'], row['first_name'], row['last_name'])
-            participants_list.append(participant)
-        return participants_list
+        participants_list.append(participant)
+    return participants_list
 
 
 def pick_winners(participants, number):
@@ -48,7 +48,12 @@ def print_winners(winners):
 
 
 if __name__ == '__main__':
-    participants = load_participants_csv(get_file_path('participants1', 'csv'))
-    json = load_participants_json(get_file_path('participants1', 'json'))
-    print_winners(pick_winners(participants, 3))
-    print_winners(pick_winners(json, 3))
+    DATA_DIR = Path('data/')
+    participants_raw_data = load_participants_csv(DATA_DIR / 'participants1.csv')
+    participants_json_raw_data = load_participants_json(DATA_DIR / 'participants1.json')
+
+    participants_csv_list = parse_participants(data=participants_raw_data)
+    participants_json_list = parse_participants(data=participants_json_raw_data)
+
+    print_winners(pick_winners(participants_csv_list, 3))
+    print_winners(pick_winners(participants_json_list, 3))
