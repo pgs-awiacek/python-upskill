@@ -20,7 +20,7 @@ def create_participant_list(data):
     return participants_list
 
 
-def pick_winners(participants, number):
-    winners = random.sample(participants, number)
+def pick_winners(participants, amount):
+    winners = random.sample(participants, amount)
     return winners
 

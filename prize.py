@@ -16,6 +16,7 @@ def get_prizes_amount(file):
 def get_prizes_list(loaded_file):
     prizes_list = []
     for data in loaded_file['prizes']:
-        for x in range(data['amount']):
-            prizes_list.append(data['name'])
+        for _ in range(data['amount']):
+            prize = Prize(data['id'], data['name'], data['amount'])
+            prizes_list.append(prize)
     return prizes_list

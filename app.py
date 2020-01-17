@@ -1,8 +1,8 @@
 import csv
 import json
 from pathlib import Path
-from participant import *
-from prize import *
+from participant import create_participant_list, pick_winners
+from prize import get_prizes_amount, get_prizes_list
 
 
 def load_csv(path):
@@ -18,18 +18,32 @@ def load_json(path):
     return reader
 
 
-# class Result:
-#     def __init__(self, name, amount, first_name, last_name):
-#         self.name = name
-#         self.amount = amount
-#         self.first_name = first_name
-#         self.last_name = last_name
-
-
-def print_list_of_winners(winners_list, prizes_list):
+def create_list_of_winners(winners_list, prizes_list):
+    result_list = []
     for data in range(len(winners_list)):
-        print(winners_list[data].first_name, winners_list[data].last_name, '->', prizes_list[data])
-    return data
+        first_name = winners_list[data].first_name
+        last_name = winners_list[data].last_name
+        prize_name = prizes_list[data].name
+        result_list.append([first_name, last_name, prize_name])
+        # result_list.append(last_name)
+        # result_list.append(prize_name)
+    return result_list
+
+
+def print_list_of_winners(result_list):
+    for data in result_list:
+        first_name = data[0]
+        last_name = data[1]
+        prize_name = data[2]
+        print(f'{first_name} {last_name} -> {prize_name}')
+
+
+# def print_list_of_winnersss(winners_list, prizes_list):
+#     for data in range(len(winners_list)):
+#         first_name = winners_list[data].first_name
+#         last_name = winners_list[data].last_name
+#         prize_name = prizes_list[data].name
+#         print(f'{first_name} {last_name} -> {prize_name}')
 
 
 if __name__ == '__main__':
@@ -48,10 +62,11 @@ if __name__ == '__main__':
 
     medal_prizes_list = get_prizes_list(separate_prizes)
     medal_winners_list = pick_winners(participants_json_list, medal_prizes_amount)
-    print_list_of_winners(medal_winners_list, medal_prizes_list)
+    print_list_of_winners(create_list_of_winners(medal_winners_list, medal_prizes_list))
+    # print_list_of_winnersss(medal_winners_list, medal_prizes_list)
 
     print('xxxxxxxxxxxx')
 
     item_prizes_list = get_prizes_list(item_giveaway)
     item_winners_list = pick_winners(participants_csv_list, item_prizes_amount)
-    print_list_of_winners(item_winners_list, item_prizes_list)
+    print_list_of_winners(create_list_of_winners(item_winners_list, item_prizes_list))
