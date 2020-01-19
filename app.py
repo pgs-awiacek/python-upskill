@@ -18,6 +18,19 @@ def load_json(path):
     return reader
 
 
+def create_list_of_winners2(winners_list, prizes_list):
+    result = list(zip(winners_list, prizes_list))
+    return result
+
+
+def print_list_of_winners2(results):
+    for data in results:
+        first_name = data[0].first_name
+        last_name = data[0].last_name
+        prize_name = data[1].name
+        print(f'{first_name} {last_name} -> {prize_name}')
+
+
 def create_list_of_winners(winners_list, prizes_list):
     result_list = []
     for data in range(len(winners_list)):
@@ -25,8 +38,6 @@ def create_list_of_winners(winners_list, prizes_list):
         last_name = winners_list[data].last_name
         prize_name = prizes_list[data].name
         result_list.append([first_name, last_name, prize_name])
-        # result_list.append(last_name)
-        # result_list.append(prize_name)
     return result_list
 
 
@@ -36,14 +47,6 @@ def print_list_of_winners(result_list):
         last_name = data[1]
         prize_name = data[2]
         print(f'{first_name} {last_name} -> {prize_name}')
-
-
-# def print_list_of_winnersss(winners_list, prizes_list):
-#     for data in range(len(winners_list)):
-#         first_name = winners_list[data].first_name
-#         last_name = winners_list[data].last_name
-#         prize_name = prizes_list[data].name
-#         print(f'{first_name} {last_name} -> {prize_name}')
 
 
 if __name__ == '__main__':
@@ -62,11 +65,10 @@ if __name__ == '__main__':
 
     medal_prizes_list = get_prizes_list(separate_prizes)
     medal_winners_list = pick_winners(participants_json_list, medal_prizes_amount)
-    print_list_of_winners(create_list_of_winners(medal_winners_list, medal_prizes_list))
-    # print_list_of_winnersss(medal_winners_list, medal_prizes_list)
+    print_list_of_winners2(create_list_of_winners2(medal_winners_list, medal_prizes_list))
 
     print('xxxxxxxxxxxx')
 
     item_prizes_list = get_prizes_list(item_giveaway)
     item_winners_list = pick_winners(participants_csv_list, item_prizes_amount)
-    print_list_of_winners(create_list_of_winners(item_winners_list, item_prizes_list))
+    print_list_of_winners2(create_list_of_winners2(item_winners_list, item_prizes_list))
