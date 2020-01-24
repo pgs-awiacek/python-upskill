@@ -4,19 +4,26 @@ from pathlib import Path
 from participant import create_participant_list, pick_winners, Participant
 from prize import get_prizes_amount, get_prizes_list, Prize
 import click
+import sys
 
 
 def load_csv(path):
-    with open(path) as csv_file:
-        reader = csv.DictReader(csv_file, delimiter=',')
-        data = list(reader)
-    return data
+    try:
+        with open(path) as csv_file:
+            reader = csv.DictReader(csv_file, delimiter=',')
+            data = list(reader)
+        return data
+    except FileNotFoundError:
+        sys.exit(f'Error: No such file or directory: {path}')
 
 
 def load_json(path):
-    with open(path) as json_file:
-        reader = json.load(json_file)
-    return reader
+    try:
+        with open(path) as json_file:
+            reader = json.load(json_file)
+        return reader
+    except FileNotFoundError:
+        sys.exit(f'Error: No such file or directory: {path}')
 
 
 def get_first_template(files):
@@ -75,7 +82,7 @@ def lottery(output, participant_file, file_format, prize_file):
     else:
         raise Exception('Invalid file format')
 
-    if not prize_file:
+    if prize_file is None:
         first_template = get_first_template(TEMPLATES_DIR)
         prizes = load_json(TEMPLATES_DIR / first_template)
     else:
@@ -86,11 +93,16 @@ def lottery(output, participant_file, file_format, prize_file):
     winners_list = pick_winners(participants_list, prizes_amount)
     create_winners_list = create_list_of_winners(winners_list, prizes_list)
     print_list_of_winners(create_winners_list)
-    save_result(create_winners_list, output)
+    if Path(output).suffix == '.json':
+        save_result(create_winners_list, output)
+    else:
+        suffix = '.json'
+        output += suffix
+        save_result(create_winners_list, output)
+    # click.launch("result.json")
 
 
 if __name__ == '__main__':
     DATA_DIR = Path('data/')
     TEMPLATES_DIR = Path(DATA_DIR / 'lottery_templates/')
-    get_first_template(TEMPLATES_DIR)
     lottery()
