@@ -1,7 +1,7 @@
 import csv
 import json
 from pathlib import Path
-from participant import create_participant_list, pick_winners, Participant
+from participant import create_participant_list, pick_winners, Participant, create_weights_list
 from prize import get_prizes_amount, get_prizes_list, Prize
 import click
 import sys
@@ -90,7 +90,8 @@ def lottery(output, participant_file, file_format, prize_file):
 
     prizes_amount = get_prizes_amount(prizes)
     prizes_list = get_prizes_list(prizes)
-    winners_list = pick_winners(participants_list, prizes_amount)
+    weights_list = create_weights_list(participants_list)
+    winners_list = pick_winners(participants_list, weights_list, prizes_amount)
     create_winners_list = create_list_of_winners(winners_list, prizes_list)
     print_list_of_winners(create_winners_list)
     if Path(output).suffix == '.json':
