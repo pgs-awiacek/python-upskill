@@ -20,7 +20,18 @@ def create_participant_list(data):
     return participants_list
 
 
-def pick_winners(participants, amount):
-    winners = random.sample(participants, amount)
+def create_weights_list(participants):
+    weight_list = []
+    for data in participants:
+        weight = data.weight
+        weight_list.append(float(weight))
+    return weight_list
+
+
+def pick_winners(participants, weights, amount):
+    winners = random.choices(participants, weights=weights, k=amount)
+    while len(set(winners)) < amount:
+        winners = random.choices(participants, weights=weights, k=amount)
     return winners
+
 
