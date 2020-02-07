@@ -1,7 +1,8 @@
 import csv
 import json
 from pathlib import Path
-from participant import create_participant_list, pick_winners, Participant, create_weights_list
+
+from participant import create_participant_list, Participant, create_weights_list, pick_winners
 from prize import get_prizes_amount, get_prizes_list, Prize
 import click
 import sys
@@ -26,7 +27,7 @@ def load_json(path):
         sys.exit(f'Error: No such file or directory: {path}')
 
 
-def get_first_template(files):
+def get_first_lottery_template(files):
     templates_list = []
     for file in files.iterdir():
         temp_name = file.name
@@ -58,12 +59,14 @@ class CustomEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-def save_result(result, output):
-    new = []
-    for data in result:
-        new.append({'participant': data[0], 'prize': data[1]})
-    with open(output, 'w') as f:
-        json.dump(new, f, cls=CustomEncoder)
+def prepare_result(winners_list):
+    results_list = [{'participant': data[0], 'prize': data[1]} for data in winners_list]
+    return results_list
+
+
+def save_result(result, output_file):
+    with open(output_file, 'w') as f:
+        json.dump(result, f, cls=CustomEncoder)
 
 
 @click.command()
@@ -75,15 +78,15 @@ def save_result(result, output):
 def lottery(output, participant_file, file_format, prize_file):
     if file_format == 'json':
         participants_json_raw_data = load_json(DATA_DIR / participant_file)
-        participants_list = create_participant_list(data=participants_json_raw_data)
+        participants_list = create_participant_list(loaded_file=participants_json_raw_data)
     elif file_format == 'csv':
         participants_csv_raw_data = load_csv(DATA_DIR / participant_file)
-        participants_list = create_participant_list(data=participants_csv_raw_data)
+        participants_list = create_participant_list(loaded_file=participants_csv_raw_data)
     else:
         raise Exception('Invalid file format')
 
     if prize_file is None:
-        first_template = get_first_template(TEMPLATES_DIR)
+        first_template = get_first_lottery_template(TEMPLATES_DIR)
         prizes = load_json(TEMPLATES_DIR / first_template)
     else:
         prizes = load_json(TEMPLATES_DIR / prize_file)
@@ -92,14 +95,16 @@ def lottery(output, participant_file, file_format, prize_file):
     prizes_list = get_prizes_list(prizes)
     weights_list = create_weights_list(participants_list)
     winners_list = pick_winners(participants_list, weights_list, prizes_amount)
-    create_winners_list = create_list_of_winners(winners_list, prizes_list)
-    print_list_of_winners(create_winners_list)
+    created_winners_list = create_list_of_winners(winners_list, prizes_list)
+    prepared_result = prepare_result(created_winners_list)
+
+    print_list_of_winners(created_winners_list)
     if Path(output).suffix == '.json':
-        save_result(create_winners_list, output)
+        save_result(prepared_result, output)
     else:
         suffix = '.json'
         output += suffix
-        save_result(create_winners_list, output)
+        save_result(prepared_result, output)
     # click.launch("result.json")
 
 
