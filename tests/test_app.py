@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from app import get_first_lottery_template, create_list_of_winners
+from app import get_first_lottery_template, create_list_of_winners, pick_winners
 from participant import Participant
 from prize import Prize
 
@@ -12,6 +12,19 @@ def test_get_first_lottery_template():
 
     result = get_first_lottery_template(test_data)
     assert result == expected
+
+
+def test_pick_winners():
+    participants = [
+        Participant(id_="1", first_name='Aga', last_name='Lamaga', weight=100),
+        Participant(id_="2", first_name='Kuba', last_name='Buba', weight=50),
+        Participant(id_="3", first_name='Fifi', last_name='Rifi', weight=1)
+    ]
+    weights = [100, 50, 1]
+    amount = 2
+    expected = ["1", "2"]
+    result = pick_winners(participants, weights, amount)
+    assert sorted([r.id for r in result]) == expected
 
 
 def test_create_list_of_winners():

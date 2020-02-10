@@ -1,4 +1,4 @@
-from prize import get_prizes_amount, get_prizes_list
+from prize import get_prizes_amount, create_prizes_list
 
 
 def test_get_prizes_amount():
@@ -16,7 +16,7 @@ def test_get_prizes_amount():
     assert result == expected
 
 
-def test_get_prizes_list():
+def test_create_prizes_list():
     test_data = {
         'name': 'Prizes list',
         'prizes': [
@@ -27,5 +27,5 @@ def test_get_prizes_list():
     }
     expected = ['Prize1', 'Prize2', 'Prize3']
 
-    result = get_prizes_list(test_data)
+    result = create_prizes_list(test_data)
     assert [r.name for r in result] == expected

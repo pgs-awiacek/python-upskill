@@ -1,11 +1,11 @@
 import csv
 import json
+import random
 from pathlib import Path
-
-from participant import create_participant_list, Participant, create_weights_list, pick_winners
-from prize import get_prizes_amount, get_prizes_list, Prize
 import click
 import sys
+from participant import Participant, create_participant_list, create_weights_list
+from prize import Prize, get_prizes_amount, create_prizes_list
 
 
 def load_csv(path):
@@ -33,6 +33,13 @@ def get_first_lottery_template(files):
         temp_name = file.name
         templates_list.append(temp_name)
     return templates_list[0]
+
+
+def pick_winners(participants, weights, amount):
+    winners = []
+    while len(set(winners)) < amount:
+        winners = random.choices(participants, weights=weights, k=amount)
+    return winners
 
 
 def create_list_of_winners(winners_list, prizes_list):
@@ -92,7 +99,7 @@ def lottery(output, participant_file, file_format, prize_file):
         prizes = load_json(TEMPLATES_DIR / prize_file)
 
     prizes_amount = get_prizes_amount(prizes)
-    prizes_list = get_prizes_list(prizes)
+    prizes_list = create_prizes_list(prizes)
     weights_list = create_weights_list(participants_list)
     winners_list = pick_winners(participants_list, weights_list, prizes_amount)
     created_winners_list = create_list_of_winners(winners_list, prizes_list)

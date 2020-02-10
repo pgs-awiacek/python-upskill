@@ -1,6 +1,3 @@
-import random
-
-
 class Participant:
     def __init__(self, id_, first_name, last_name, weight=1):
         self.id = id_
@@ -26,13 +23,6 @@ def create_weights_list(participants):
         weight = data.weight
         weight_list.append(float(weight))
     return weight_list
-
-
-def pick_winners(participants, weights, amount):
-    winners = []
-    while len(set(winners)) < amount:
-        winners = random.choices(participants, weights=weights, k=amount)
-    return winners
 
 
 

@@ -13,7 +13,7 @@ def get_prizes_amount(file):
     return sum(amount_list)
 
 
-def get_prizes_list(loaded_file):
+def create_prizes_list(loaded_file):
     prizes_list = []
     for data in loaded_file['prizes']:
         for _ in range(data['amount']):
