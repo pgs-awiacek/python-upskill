@@ -1,6 +1,3 @@
-import random
-
-
 class Participant:
     def __init__(self, id_, first_name, last_name, weight=1):
         self.id = id_
@@ -9,9 +6,9 @@ class Participant:
         self.weight = weight
 
 
-def create_participant_list(data):
+def create_participant_list(loaded_file):
     participants_list = []
-    for row in data:
+    for row in loaded_file:
         if 'weight' in row:
             participant = Participant(row['id'], row['first_name'], row['last_name'], row['weight'])
         else:
@@ -28,10 +25,6 @@ def create_weights_list(participants):
     return weight_list
 
 
-def pick_winners(participants, weights, amount):
-    winners = random.choices(participants, weights=weights, k=amount)
-    while len(set(winners)) < amount:
-        winners = random.choices(participants, weights=weights, k=amount)
-    return winners
+
 
 
