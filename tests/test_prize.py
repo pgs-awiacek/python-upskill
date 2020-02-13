@@ -1,19 +1,4 @@
-from prize import get_prizes_amount, create_prizes_list
-
-
-def test_get_prizes_amount():
-    test_data = {
-        'name': 'Prizes list',
-        'prizes': [
-            {'id': 1, 'name': 'Prize1', 'amount': 1},
-            {'id': 2, 'name': 'Prize2', 'amount': 2},
-            {'id': 3, 'name': 'Prize3', 'amount': 3}
-        ]
-    }
-    expected = 6
-
-    result = get_prizes_amount(test_data)
-    assert result == expected
+from prize import create_prizes_list
 
 
 def test_create_prizes_list():
