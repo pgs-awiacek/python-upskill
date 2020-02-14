@@ -5,14 +5,6 @@ class Prize:
         self.amount = amount
 
 
-def get_prizes_amount(file):
-    amount_list = []
-    for value in file['prizes']:
-        amount = value['amount']
-        amount_list.append(amount)
-    return sum(amount_list)
-
-
 def create_prizes_list(loaded_file):
     prizes_list = []
     for data in loaded_file['prizes']:
