@@ -37,7 +37,11 @@ def get_first_lottery_template(files):
 
 def pick_winners(participants, weights, amount):
     winners = []
-    while len(set(winners)) < amount:
+    if len(weights) >= amount:
+        while len(set(winners)) < amount:
+            winners = random.choices(participants, weights=weights, k=amount)
+    elif len(weights) > 0:
+        amount = len(weights)
         winners = random.choices(participants, weights=weights, k=amount)
     return winners
 
@@ -116,9 +120,9 @@ def main(output, participant_file, file_format, prize_file):
     prizes_amount = len(prizes_list)
     weights_list = create_weights_list(participants_list)
     picked_winners = pick_winners(participants_list, weights_list, prizes_amount)
-    created_winners_list = list(zip(picked_winners, prizes_list))
+    winners_with_prizes = list(zip(picked_winners, prizes_list))
 
-    prepared_result = prepare_result(created_winners_list)
+    prepared_result = prepare_result(winners_with_prizes)
     save_result_file(output, prepared_result)
 
 
