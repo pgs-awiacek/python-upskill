@@ -1,16 +1,16 @@
-from pathlib import Path
+from unittest.mock import patch
 
-from app import get_first_lottery_template, pick_winners
+from app import pick_winners
 from participant import Participant
+from lottery_template import LotteryTemplateFile
 
 
-def test_get_first_lottery_template():
-    p = Path().absolute().parent
-    test_data = Path(p / 'data/lottery_templates')
-    expected = 'item_giveaway.json'
-
-    result = get_first_lottery_template(test_data)
-    assert result == expected
+@patch('lottery_template.get_first_lottery_template')
+def test_get_first_lottery_template(mock_get_temp):
+    mock_get_temp.return_value = 'first_file.json'
+    temp = LotteryTemplateFile()
+    name = temp.get_first_file()
+    assert name == 'first_file.json'
 
 
 class TestPickWinners:
