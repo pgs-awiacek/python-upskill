@@ -27,12 +27,10 @@ def load_json(path):
         sys.exit(f'Error: No such file or directory: {path}')
 
 
-def get_first_lottery_template(files):
-    templates_list = []
-    for file in files.iterdir():
-        temp_name = file.name
-        templates_list.append(temp_name)
-    return templates_list[0]
+def get_first_lottery_template(directory):
+    temp_list = [file.name for file in directory.iterdir()]
+    temp_list.sort()
+    return temp_list[0]
 
 
 def pick_winners(participants, weights, prizes_amount):
@@ -40,7 +38,7 @@ def pick_winners(participants, weights, prizes_amount):
     if len(participants) >= prizes_amount:
         while len(set(winners)) < prizes_amount:
             winners = random.choices(participants, weights=weights, k=prizes_amount)
-    elif len(participants) < prizes_amount:
+    else:
         winners = participants
     return winners
 

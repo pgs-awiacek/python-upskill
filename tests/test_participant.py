@@ -23,4 +23,3 @@ def test_create_weight_list():
 
     result = create_weights_list(test_data)
     assert result == expected
-
