@@ -2,15 +2,15 @@ from unittest.mock import patch
 
 from app import pick_winners
 from participant import Participant
-from lottery_template import LotteryTemplateFile
+from lottery_template import LotteryTemplate
 
 
 @patch('lottery_template.get_first_lottery_template')
 def test_get_first_lottery_template(mock_get_temp):
     mock_get_temp.return_value = 'first_file.json'
-    temp = LotteryTemplateFile()
-    name = temp.get_first_file()
-    assert name == 'first_file.json'
+    temp = LotteryTemplate()
+    file_name = temp.get_first_file()
+    assert file_name == 'first_file.json'
 
 
 class TestPickWinners:
